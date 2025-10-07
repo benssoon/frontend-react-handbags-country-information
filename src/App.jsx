@@ -2,7 +2,6 @@ import './App.css';
 import worldMap from'./assets/world_map.png';
 import Card from './components/Card/Card.jsx';
 import {useState} from 'react';
-import Countries from './components/Countries/Countries.jsx';
 import axios from 'axios';
 
 
