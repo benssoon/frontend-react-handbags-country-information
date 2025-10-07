@@ -1,0 +1,13 @@
+header {
+    display: flex;
+    gap: 1rem;
+}
+
+.countryCard {
+    flex: 0 1 200px;
+    text-align: center;
+}
+
+.flag {
+    max-width: 5rem;
+}
