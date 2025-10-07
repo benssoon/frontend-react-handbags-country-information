@@ -1,10 +1,11 @@
 import './App.css';
+import worldMap from'./assets/world_map.png';
 
 function App() {
 
     return (
         <>
-            Maak je applicatie hier!
+            <img src={worldMap} />
         </>
     )
 }
