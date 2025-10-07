@@ -4,7 +4,6 @@ import Card from './components/Card/Card.jsx';
 import {useState} from 'react';
 import Countries from './components/Countries/Countries.jsx';
 import axios from 'axios';
-import countries from './components/Countries/Countries.jsx';
 
 
 
@@ -14,11 +13,11 @@ function App() {
 
     const[allCountries, setAllCountries] = useState([]);
 
-    async function fetchCountry() {
+    async function fetchCountries() {
         try {
             const response = await axios.get('https://restcountries.com/v3.1/all', {
                 params: {
-                    fields: 'name,flag,flags,population',
+                    fields: 'name,flag,flags,population,region',
                 }
             });
             setAllCountries(response.data);
@@ -31,7 +30,51 @@ function App() {
 
     function showCountries() {
         toggleButtonVisible(false);
-        fetchCountry();
+        fetchCountries();
+    }
+
+    function chooseColor(region) {
+        console.log(region);
+        let color = 'forestgreen';
+        switch (region) {
+            case 'Africa':
+                color = 'blue';
+                break;
+            case 'Americas':
+                color = 'darkgreen';
+                break;
+            case 'Asia':
+                color = 'darkred';
+                break;
+            case 'Europe':
+                color = 'yellow';
+                break;
+            case 'Oceania':
+                color = 'purple';
+                break;
+            default:
+                break;
+        }
+        return color;
+    }
+
+    function organizeCountries(countries) {
+        countries.sort((a, b) => {return a.population - b.population})
+        return (
+            <section className="allCountries">
+                {countries.map((country) => {
+                    return (<Card
+                        key={country.name+country.name.common}
+                        countryName={country.name.common}
+                        countryFlag={country.flags.svg}
+                        flagAlt={country.flags.alt}
+                        emojiFlag={country.flag}
+                        population={country.population}
+                        textColor={chooseColor(country.region)}
+                    />)
+                })}
+            </section>
+        );
     }
 
     return (
@@ -39,7 +82,7 @@ function App() {
             <img src={worldMap} />
             <h2>World Regions</h2>
             {buttonVisible && <button onClick={showCountries}>Click me</button>
-                || <Countries allCountries={allCountries}/>}
+                || organizeCountries(allCountries)}
         </section>
     )
 }
