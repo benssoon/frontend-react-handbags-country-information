@@ -9,6 +9,7 @@ header {
     padding: 10px;
     flex: 0 1 300px;
     text-align: center;
+    background-color: lightgrey;
 }
 
 .countryCard h4 {

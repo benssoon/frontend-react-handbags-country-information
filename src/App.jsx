@@ -8,32 +8,26 @@ import axios from 'axios';
 
 function App() {
 
-    const[buttonVisible, toggleButtonVisible] = useState(true);
+    const[searchState, setSearchState] = useState('');
+    const[countries, setCountries] = useState([]);
 
-    const[allCountries, setAllCountries] = useState([]);
-
-    async function fetchCountries() {
+    async function fetchCountries(stateFunction, country) {
+        const url = 'https://restcountries.com/v3.1/' + (country ? `name/${country}` : 'all');
+        console.log('The url is: ' + url);
         try {
-            const response = await axios.get('https://restcountries.com/v3.1/all', {
+            const response = await axios.get(url, {
                 params: {
                     fields: 'name,flag,flags,population,region',
                 }
             });
-            setAllCountries(response.data);
+            stateFunction(response.data);
         } catch (e) {
             console.error(e);
-            toggleButtonVisible(true);
-            setAllCountries([]);
+            stateFunction([]);
         }
     }
 
-    function showCountries() {
-        toggleButtonVisible(false);
-        fetchCountries();
-    }
-
     function chooseColor(region) {
-        console.log(region);
         let color = 'forestgreen';
         switch (region) {
             case 'Africa':
@@ -58,7 +52,7 @@ function App() {
     }
 
     function organizeCountries(countries) {
-        countries.sort((a, b) => {return a.population - b.population})
+        countries.sort((a, b) => {return a.population - b.population});
         return (
             <section className="allCountries">
                 {countries.map((country) => {
@@ -76,12 +70,39 @@ function App() {
         );
     }
 
+    function handleChange(e) {
+        setSearchState(e.target.value);
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        setSearchState('');
+        fetchCountries(setCountries, searchState);
+    }
+
     return (
         <section className="main">
             <img src={worldMap} />
-            <h2>World Regions</h2>
-            {buttonVisible && <button onClick={showCountries}>Click me</button>
-                || organizeCountries(allCountries)}
+
+            <form>
+                <input
+                type={'text'}
+                value={searchState}
+                onChange={handleChange}
+            />
+                <button
+                    type="submit"
+                    onClick={handleSubmit}
+                >Search
+                </button>
+            </form>
+            {countries.length === 0 ||
+                <h2>{
+                    (countries.length === 250 && 'World Countries') ||
+                    ('Your Selected Countr' + (countries.length === 1 ? 'y' : 'ies'))
+                }</h2>
+            }
+            {organizeCountries(countries)}
         </section>
     )
 }
