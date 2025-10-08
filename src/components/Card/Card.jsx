@@ -1,6 +1,7 @@
 import './Card.css';
+import arrayToString from '../../helpers/arrayToString.js';
 
-function Card({countryName, countryFlag, flagAlt, population, textColor}) {
+function Card({countryName, countryFlag, flagAlt, population, textColor, capital, domains, neighbors, subregion}) {
     return (
         <section
             className="countryCard"
@@ -8,12 +9,13 @@ function Card({countryName, countryFlag, flagAlt, population, textColor}) {
         >
             <header>
                 <img className="flag" src={countryFlag} alt={flagAlt} />
-                <h4>{countryName}</h4>
+                <h2>{countryName}</h2>
             </header>
-            <p>{countryName} is situated in [subarea-name] and the capital is [capital]
-                It has a population of {Math.round(population/1000000)} million people and it borders with
-                [amount] neighboring countries.
-                Websites can be found on [domain] domains.</p>
+            <p>{countryName} is situated in {subregion} and the capital is {capital}.</p>
+            <p>It has a population of {Math.round(population/1000000)} million
+                people and it borders with {neighbors.length} neighboring countries.</p>
+
+            <p>Websites can be found on {arrayToString(domains)} domains.</p>
         </section>
     );
 }

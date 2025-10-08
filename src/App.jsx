@@ -10,20 +10,24 @@ function App() {
 
     const[searchState, setSearchState] = useState('');
     const[countries, setCountries] = useState([]);
+    const[error, setError] = useState([]);
 
-    async function fetchCountries(stateFunction, country) {
+    async function fetchCountries(country) {
+        setError([]);
         const url = 'https://restcountries.com/v3.1/' + (country ? `name/${country}` : 'all');
         console.log('The url is: ' + url);
         try {
             const response = await axios.get(url, {
                 params: {
-                    fields: 'name,flag,flags,population,region',
+                    fields: 'name,flag,flags,population,region,subregion,capital,borders,tld',
                 }
             });
-            stateFunction(response.data);
+            setCountries(response.data);
         } catch (e) {
-            console.error(e);
-            stateFunction([]);
+            setError([e.status, e.message, searchState])
+            console.error(e.message);
+            console.error(e.status);
+            setCountries([]);
         }
     }
 
@@ -64,6 +68,10 @@ function App() {
                         emojiFlag={country.flag}
                         population={country.population}
                         textColor={chooseColor(country.region)}
+                        subregion={country.subregion}
+                        capital={country.capital}
+                        domains={country.tld}
+                        neighbors={country.borders}
                     />)
                 })}
             </section>
@@ -77,7 +85,7 @@ function App() {
     function handleSubmit(e) {
         e.preventDefault();
         setSearchState('');
-        fetchCountries(setCountries, searchState);
+        fetchCountries(searchState);
     }
 
     return (
@@ -96,6 +104,7 @@ function App() {
                 >Search
                 </button>
             </form>
+            {error[0] && <p>{(error[0] === 404 && `${error[2]} does not exist. Please try again.`) || error[1] || 'Something went wrong'}</p>}
             {countries.length === 0 ||
                 <h2>{
                     (countries.length === 250 && 'World Countries') ||
