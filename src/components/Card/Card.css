@@ -1,0 +1,22 @@
+header {
+    display: flex;
+    gap: 1rem;
+}
+
+.countryCard {
+    border: solid darkslategrey 2px;
+    border-radius: 20px;
+    padding: 10px;
+    flex: 0 1 300px;
+    text-align: center;
+    background-color: lightgrey;
+}
+
+.countryCard h4 {
+    color: var(--country-name-color, blue);
+}
+
+.flag {
+    max-width: 5rem;
+}
+
